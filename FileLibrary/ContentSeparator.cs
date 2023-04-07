@@ -12,7 +12,6 @@ public class ContentSeparator
         _file = file;
         _format = format;
 
-        SeparatedText = new ReadOnlyCollection<List<string>>(GetAllText());
         SeparatedSum = new ReadOnlyCollection<decimal>(GetSum(out var brokenList));
         SeparatedBroken = new ReadOnlyCollection<int>(brokenList);
     }
@@ -20,8 +19,6 @@ public class ContentSeparator
     public ReadOnlyCollection<decimal> SeparatedSum { get; }
     
     public ReadOnlyCollection<int> SeparatedBroken { get; }
-
-    public ReadOnlyCollection<List<string>> SeparatedText { get; }
 
     private List<string?> GetAllLines()
     {
@@ -45,13 +42,13 @@ public class ContentSeparator
         return lines;
     }
 
-    private List<List<string>> GetAllText()
+    private List<List<string>> GetSeparatedText(char separator = ',')
     {
         var result = new List<List<string>>();
         
         foreach (var line in GetAllLines())
         {
-            result.Add(new List<string>(line!.Trim().Split(',').ToArray()));
+            result.Add(new List<string>(line!.Trim().Split(separator).ToArray()));
         }
 
         return result;
@@ -60,16 +57,15 @@ public class ContentSeparator
     private List<decimal> GetSum(out List<int> brokenList)
     {
         brokenList = new List<int>();
-
         var sumList = new List<decimal>();
-        
         var converter = new ContentConverter();
+        var separatedText = GetSeparatedText();
 
-        for (var i = 0; i < SeparatedText.Count; i++)
+        for (var i = 0; i < separatedText.Count; i++)
         {
             var sum = 0m;
             
-            foreach (var number in SeparatedText[i])
+            foreach (var number in separatedText[i])
             {
                 if (converter.ToDecimal(number, _format, out var res))
                 {
