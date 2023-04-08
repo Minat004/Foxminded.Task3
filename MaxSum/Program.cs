@@ -7,8 +7,10 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var param = new List<string>(args);
         FileEntity file;
+        
+        var param = new List<string>(args);
+        
         var nfi = new NumberFormatInfo
         {
             NumberDecimalSeparator = "."
@@ -40,13 +42,16 @@ public static class Program
             Console.WriteLine($"Cant find path to file: {path}");
         }
 
-        var content = new ContentSeparator(file, nfi);
-
-        Console.WriteLine(content.SeparatedSum.Max());
-
-        foreach (var item in content.SeparatedBroken)
+        using (IContentStreamReader streamReader = new ContentStreamReader(file))
         {
-            Console.Write($"{item} ");
+            var content = new ContentSeparator(streamReader, nfi);
+
+            Console.WriteLine(content.SeparatedSum.Max());
+
+            foreach (var item in content.SeparatedBroken)
+            {
+                Console.Write($"{item} ");
+            }
         }
     }
 }

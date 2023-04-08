@@ -4,42 +4,29 @@ namespace FileLibrary;
 
 public class ContentSeparator
 {
-    private readonly FileEntity _file;
     private readonly IFormatProvider _format;
 
-    public ContentSeparator(FileEntity file, IFormatProvider format)
+    public ContentSeparator(
+        IContentStreamReader streamReader,
+        IFormatProvider format
+    )
     {
-        _file = file;
         _format = format;
+        _streamReader = streamReader;
 
         SeparatedSum = new ReadOnlyCollection<decimal>(GetSum(out var brokenList));
         SeparatedBroken = new ReadOnlyCollection<int>(brokenList);
     }
 
+    private readonly IContentStreamReader _streamReader;
+
     public ReadOnlyCollection<decimal> SeparatedSum { get; }
     
     public ReadOnlyCollection<int> SeparatedBroken { get; }
 
-    private List<string?> GetAllLines()
+    public List<string?> GetAllLines()
     {
-        var lines = new List<string?>();
-        
-        try
-        {
-            using (var sr = new StreamReader(_file.Path))
-            {
-                while (!sr.EndOfStream)
-                {
-                    lines.Add(sr.ReadLine());
-                }        
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-
-        return lines;
+        return _streamReader.ReadLines();
     }
 
     private List<List<string>> GetSeparatedText(char separator = ',')
