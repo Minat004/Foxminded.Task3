@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-
-namespace FileLibrary;
+﻿namespace FileLibrary;
 
 public class ContentSeparator
 {
     private readonly IFormatProvider _format;
+    private readonly IContentStreamReader _streamReader;
 
     public ContentSeparator(
         IContentStreamReader streamReader,
@@ -13,23 +12,14 @@ public class ContentSeparator
     {
         _format = format;
         _streamReader = streamReader;
-
-        SeparatedSum = new ReadOnlyCollection<decimal>(GetSum(out var brokenList));
-        SeparatedBroken = new ReadOnlyCollection<int>(brokenList);
     }
-
-    private readonly IContentStreamReader _streamReader;
-
-    public ReadOnlyCollection<decimal> SeparatedSum { get; }
-    
-    public ReadOnlyCollection<int> SeparatedBroken { get; }
 
     public List<string?> GetAllLines()
     {
         return _streamReader.ReadLines();
     }
 
-    private List<List<string>> GetSeparatedText(char separator = ',')
+    public List<List<string>> GetSeparatedText(char separator = ',')
     {
         var result = new List<List<string>>();
         
@@ -41,7 +31,7 @@ public class ContentSeparator
         return result;
     }
 
-    private List<decimal> GetSum(out List<int> brokenList)
+    public List<decimal> GetSum(out List<int> brokenList)
     {
         brokenList = new List<int>();
         var sumList = new List<decimal>();
@@ -51,6 +41,7 @@ public class ContentSeparator
         for (var i = 0; i < separatedText.Count; i++)
         {
             var sum = 0m;
+            var isBroken = false;
             
             foreach (var number in separatedText[i])
             {
@@ -61,11 +52,15 @@ public class ContentSeparator
                 else
                 {
                     brokenList.Add(i);
+                    isBroken = true;
                     break;
                 }
             }
 
-            sumList.Add(sum);
+            if (!isBroken)
+            {
+                sumList.Add(sum);
+            }
         }
 
         return sumList;
