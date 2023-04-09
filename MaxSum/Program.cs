@@ -15,7 +15,7 @@ public static class Program
         {
             NumberDecimalSeparator = "."
         };
-
+        
         while (true)
         {
             if (param.Count != 0)
@@ -46,12 +46,29 @@ public static class Program
         {
             var content = new ContentSeparator(streamReader, nfi);
 
-            Console.WriteLine(content.SeparatedSum.Max());
+            Console.WriteLine();
+            Console.WriteLine("List of SUM lines:");
 
-            foreach (var item in content.SeparatedBroken)
+            var sumArray = content.GetSum(out var brokenList);
+            
+            foreach (var item in sumArray)
+            {
+                Console.Write($"{item.ToString(nfi)} ");
+            }
+            
+            Console.WriteLine("\n");
+
+            Console.Write("MAX: ");
+            Console.WriteLine(sumArray.Max().ToString(nfi));
+
+            Console.WriteLine();
+            Console.WriteLine("List of BROKEN indexes:");
+            foreach (var item in brokenList)
             {
                 Console.Write($"{item} ");
             }
+
+            Console.ReadLine();
         }
     }
 }
