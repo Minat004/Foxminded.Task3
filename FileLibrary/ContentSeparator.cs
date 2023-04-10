@@ -1,4 +1,6 @@
-﻿namespace FileLibrary;
+﻿using System.Globalization;
+
+namespace FileLibrary;
 
 public class ContentSeparator
 {
@@ -14,16 +16,11 @@ public class ContentSeparator
         _streamReader = streamReader;
     }
 
-    public List<string?> GetAllLines()
-    {
-        return _streamReader.ReadLines();
-    }
-
     public List<List<string>> GetSeparatedText(char separator = ',')
     {
         var result = new List<List<string>>();
         
-        foreach (var line in GetAllLines())
+        foreach (var line in _streamReader.ReadLines())
         {
             result.Add(new List<string>(line!.Trim().Split(separator).ToArray()));
         }
@@ -35,7 +32,6 @@ public class ContentSeparator
     {
         brokenList = new List<int>();
         var sumList = new List<decimal>();
-        var converter = new ContentConverter();
         var separatedText = GetSeparatedText();
 
         for (var i = 0; i < separatedText.Count; i++)
@@ -45,13 +41,13 @@ public class ContentSeparator
             
             foreach (var number in separatedText[i])
             {
-                if (converter.ToDecimal(number, _format, out var res))
+                if (decimal.TryParse(number, NumberStyles.Any, _format, out var res))
                 {
                     sum += res;
                 }
                 else
                 {
-                    brokenList.Add(i);
+                    brokenList.Add(i + 1);
                     isBroken = true;
                     break;
                 }

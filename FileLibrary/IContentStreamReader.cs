@@ -1,6 +1,6 @@
 ﻿namespace FileLibrary;
 
-public interface IContentStreamReader : IDisposable
+public interface IContentStreamReader
 {
     public List<string?> ReadLines();
 }

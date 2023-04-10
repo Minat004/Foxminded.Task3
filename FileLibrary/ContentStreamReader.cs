@@ -2,11 +2,11 @@
 
 public class ContentStreamReader : IContentStreamReader
 {
-    private readonly StreamReader? _streamReader;
+    private readonly string _path;
     
-    public ContentStreamReader(FileEntity file)
+    public ContentStreamReader(string path)
     {
-        _streamReader = new StreamReader(file.Path);
+        _path = path;
     }
 
     public List<string?> ReadLines()
@@ -15,21 +15,20 @@ public class ContentStreamReader : IContentStreamReader
         
         try
         {
-            while (!_streamReader!.EndOfStream)
+            using (var streamReader = new StreamReader(_path))
             {
-                lines.Add(_streamReader.ReadLine());
+                while (!streamReader.EndOfStream)
+                {
+                    lines.Add(streamReader.ReadLine());
+                }
             }
         }
         catch (Exception e)
         {
+            Console.WriteLine($"Cant read the file: {_path}");
             Console.WriteLine(e.Message);
         }
 
         return lines;
-    }
-
-    public void Dispose()
-    {
-        _streamReader!.Close();
     }
 }

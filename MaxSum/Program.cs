@@ -7,7 +7,7 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        FileEntity file;
+        string path;
         
         var param = new List<string>(args);
         
@@ -22,7 +22,7 @@ public static class Program
             {
                 if (File.Exists(param[0]))
                 {
-                    file = new FileEntity(param[0]);
+                    path = param[0];
                     break;
                 }
 
@@ -31,44 +31,36 @@ public static class Program
             }
 
             Console.Write("Enter path to file: ");
-            var path = Console.ReadLine();
+            var pathIn = Console.ReadLine();
 
-            if (File.Exists(path))
+            if (File.Exists(pathIn))
             {
-                file = new FileEntity(path);
+                path = pathIn;
                 break;
             }
 
-            Console.WriteLine($"Cant find path to file: {path}");
+            Console.WriteLine($"Cant find path to file: {pathIn}");
         }
 
-        using (IContentStreamReader streamReader = new ContentStreamReader(file))
+        IContentStreamReader streamReader = new ContentStreamReader(path);
+        var content = new ContentSeparator(streamReader, nfi);
+
+        Console.WriteLine();
+        Console.WriteLine("List of SUM lines:");
+
+        var sumArray = content.GetSum(out var brokenList);
+
+        Console.WriteLine();
+        Console.Write("Index of MAX: ");
+        Console.WriteLine(sumArray.IndexOf(sumArray.Max() + 1));
+
+        Console.WriteLine();
+        Console.WriteLine("List of BROKEN indexes:");
+        foreach (var item in brokenList)
         {
-            var content = new ContentSeparator(streamReader, nfi);
-
-            Console.WriteLine();
-            Console.WriteLine("List of SUM lines:");
-
-            var sumArray = content.GetSum(out var brokenList);
-            
-            foreach (var item in sumArray)
-            {
-                Console.Write($"{item.ToString(nfi)} ");
-            }
-            
-            Console.WriteLine("\n");
-
-            Console.Write("MAX: ");
-            Console.WriteLine(sumArray.Max().ToString(nfi));
-
-            Console.WriteLine();
-            Console.WriteLine("List of BROKEN indexes:");
-            foreach (var item in brokenList)
-            {
-                Console.Write($"{item} ");
-            }
-
-            Console.ReadLine();
+            Console.Write($"{item} ");
         }
+
+        Console.ReadLine();
     }
 }

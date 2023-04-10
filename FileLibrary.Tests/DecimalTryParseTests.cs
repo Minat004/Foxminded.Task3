@@ -2,7 +2,7 @@
 
 namespace FileLibrary.Tests;
 
-public class ContentConverterTests
+public class DecimalTryParseTests
 {
     [Theory]
     [InlineData("15.23", 15.23, true)]
@@ -12,14 +12,12 @@ public class ContentConverterTests
     [InlineData("0.000001.00001", 0, false)]
     public void ToDecimalTest(string inputString, decimal expected, bool expectedTryParse)
     {
-        var converter = new ContentConverter();
-        
         var nfi = new NumberFormatInfo()
         {
             NumberDecimalSeparator = "."
         };
 
-        var actualParse = converter.ToDecimal(inputString, nfi, out var actual);
+        var actualParse = decimal.TryParse(inputString, NumberStyles.Any, nfi, out var actual);
         
         Assert.Equal(expectedTryParse, actualParse);
         Assert.Equal(expected, actual);

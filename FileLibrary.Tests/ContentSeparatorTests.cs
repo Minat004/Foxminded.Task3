@@ -7,26 +7,6 @@ namespace FileLibrary.Tests;
 public class ContentSeparatorTests
 {
     [Fact]
-    public void GetAllLinesTest()
-    {
-        using (var mock = AutoMock.GetLoose())
-        {
-            mock.Mock<IContentStreamReader>()
-                .Setup(x => x.ReadLines())
-                .Returns(GetLines());
-
-            var mockSeparator = mock.Create<ContentSeparator>();
-
-            var expected = GetLines();
-
-            var actual = mockSeparator.GetAllLines();
-            
-            Assert.True(actual != null);
-            Assert.Equal(expected, actual);
-        }
-    }
-
-    [Fact]
     public void GetSeparatedTextTest()
     {
         using (var mock = AutoMock.GetLoose())
