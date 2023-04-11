@@ -1,69 +1,11 @@
-﻿using FileLibrary;
-
-namespace MaxSum;
+﻿namespace MaxSum;
 
 public static class Program
 {
     public static void Main(string[] args)
     {
-        string path;
+        var path = App.InputValidator(args);
         
-        var param = new List<string>(args);
-
-        while (true)
-        {
-            if (param.Count != 0)
-            {
-                if (File.Exists(param[0]))
-                {
-                    path = param[0];
-                    break;
-                }
-
-                Console.WriteLine($"Cant find path to file from CLI parameter: {param[0]}");
-                param.Clear();
-            }
-
-            Console.Write("Enter path to file: ");
-            var pathIn = Console.ReadLine();
-
-            if (File.Exists(pathIn))
-            {
-                path = pathIn;
-                break;
-            }
-
-            Console.WriteLine($"Cant find path to file: {pathIn}");
-        }
-        
-        try
-        {
-            IContentStreamReader streamReader = new ContentStreamReader(path);
-            var content = new ContentSeparator(streamReader);
-
-            var sumArray = content.GetDictOfSum(out var brokenList);
-            var index = 
-                sumArray
-                    .FirstOrDefault(x => x.Value == sumArray.Max(k => k.Value)).Key;
-
-            Console.WriteLine();
-            Console.Write("Index of MAX: ");
-            Console.WriteLine(index);
-
-            Console.WriteLine();
-            Console.Write("List of BROKEN indexes: ");
-        
-            foreach (var item in brokenList)
-            {
-                Console.Write($"{item} ");
-            }
-
-            Console.ReadLine();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Cant read the file {path}!");
-            Console.WriteLine(e);
-        }
+        App.Output(path);
     }
 }
