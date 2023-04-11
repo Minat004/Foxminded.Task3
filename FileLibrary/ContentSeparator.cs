@@ -29,7 +29,7 @@ public class ContentSeparator
                 {
                     sum += res;
                 }
-                else if (!string.IsNullOrEmpty(number.Trim()) || separated[^1] == string.Empty)
+                else if (!string.IsNullOrEmpty(number.Trim()) || separated[^1] != string.Empty)
                 {
                     brokenList.Add(i + 1);
                     isBroken = true;

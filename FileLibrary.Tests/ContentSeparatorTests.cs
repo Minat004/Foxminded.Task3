@@ -80,7 +80,8 @@ public class ContentSeparatorTests
             "1,2,3,4,5,j6,7,8,9,0a",
             "1,2,3,4,5,j6,7,8,9,0a",
             "1.234,1.789,",
-            "1, 2 , 3 , 4 , 5 , j 6 ,  7 , 8 , 9 , 0 a "
+            "1, 2 , 3 , 4 , 5 , j 6 ,  7 , 8 , 9 , 0 a ",
+            ",,,,,,,"
         };
             
         return result;
@@ -93,7 +94,8 @@ public class ContentSeparatorTests
             { 1, 115.4m },
             { 2, 5674246.13134765974893m },
             { 4, 1491.023m },
-            { 12, 3.023m }
+            { 12, 3.023m },
+            { 14, 0m }
         };
 
         return result;
