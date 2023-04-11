@@ -21,14 +21,15 @@ public class ContentSeparator
         {
             var sum = 0m;
             var isBroken = false;
+            var separated = lines[i].Trim().Split(separator);
             
-            foreach (var number in lines[i]!.Trim().Split(separator))
+            foreach (var number in separated)
             {
                 if (decimal.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out var res))
                 {
                     sum += res;
                 }
-                else
+                else if (!string.IsNullOrEmpty(number.Trim()) || separated[^1] == string.Empty)
                 {
                     brokenList.Add(i + 1);
                     isBroken = true;
