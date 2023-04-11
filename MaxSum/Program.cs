@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using FileLibrary;
+﻿using FileLibrary;
 
 namespace MaxSum;
 
@@ -10,12 +9,7 @@ public static class Program
         string path;
         
         var param = new List<string>(args);
-        
-        var nfi = new NumberFormatInfo
-        {
-            NumberDecimalSeparator = "."
-        };
-        
+
         while (true)
         {
             if (param.Count != 0)
@@ -41,26 +35,35 @@ public static class Program
 
             Console.WriteLine($"Cant find path to file: {pathIn}");
         }
-
-        IContentStreamReader streamReader = new ContentStreamReader(path);
-        var content = new ContentSeparator(streamReader, nfi);
-
-        Console.WriteLine();
-        Console.WriteLine("List of SUM lines:");
-
-        var sumArray = content.GetSum(out var brokenList);
-
-        Console.WriteLine();
-        Console.Write("Index of MAX: ");
-        Console.WriteLine(sumArray.IndexOf(sumArray.Max() + 1));
-
-        Console.WriteLine();
-        Console.WriteLine("List of BROKEN indexes:");
-        foreach (var item in brokenList)
+        
+        try
         {
-            Console.Write($"{item} ");
-        }
+            IContentStreamReader streamReader = new ContentStreamReader(path);
+            var content = new ContentSeparator(streamReader);
 
-        Console.ReadLine();
+            var sumArray = content.GetDictOfSum(out var brokenList);
+            var index = 
+                sumArray
+                    .FirstOrDefault(x => x.Value == sumArray.Max(k => k.Value)).Key;
+
+            Console.WriteLine();
+            Console.Write("Index of MAX: ");
+            Console.WriteLine(index);
+
+            Console.WriteLine();
+            Console.Write("List of BROKEN indexes: ");
+        
+            foreach (var item in brokenList)
+            {
+                Console.Write($"{item} ");
+            }
+
+            Console.ReadLine();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Cant read the file {path}!");
+            Console.WriteLine(e);
+        }
     }
 }

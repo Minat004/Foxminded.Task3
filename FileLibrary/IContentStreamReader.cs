@@ -2,5 +2,5 @@
 
 public interface IContentStreamReader
 {
-    public List<string?> ReadLines();
+    public IEnumerable<string?> ReadLines();
 }

@@ -9,26 +9,14 @@ public class ContentStreamReader : IContentStreamReader
         _path = path;
     }
 
-    public List<string?> ReadLines()
+    public IEnumerable<string?> ReadLines()
     {
-        var lines = new List<string?>();
-        
-        try
+        using (var streamReader = new StreamReader(_path))
         {
-            using (var streamReader = new StreamReader(_path))
+            while (!streamReader.EndOfStream)
             {
-                while (!streamReader.EndOfStream)
-                {
-                    lines.Add(streamReader.ReadLine());
-                }
+                yield return streamReader.ReadLine();
             }
         }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Cant read the file: {_path}");
-            Console.WriteLine(e.Message);
-        }
-
-        return lines;
     }
 }

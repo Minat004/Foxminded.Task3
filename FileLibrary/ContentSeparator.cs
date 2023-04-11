@@ -4,44 +4,27 @@ namespace FileLibrary;
 
 public class ContentSeparator
 {
-    private readonly IFormatProvider _format;
     private readonly IContentStreamReader _streamReader;
 
-    public ContentSeparator(
-        IContentStreamReader streamReader,
-        IFormatProvider format
-    )
+    public ContentSeparator(IContentStreamReader streamReader)
     {
-        _format = format;
         _streamReader = streamReader;
     }
 
-    public List<List<string>> GetSeparatedText(char separator = ',')
-    {
-        var result = new List<List<string>>();
-        
-        foreach (var line in _streamReader.ReadLines())
-        {
-            result.Add(new List<string>(line!.Trim().Split(separator).ToArray()));
-        }
-
-        return result;
-    }
-
-    public List<decimal> GetSum(out List<int> brokenList)
+    public Dictionary<int, decimal> GetDictOfSum(out List<int> brokenList, char separator = ',')
     {
         brokenList = new List<int>();
-        var sumList = new List<decimal>();
-        var separatedText = GetSeparatedText();
+        var sumList = new Dictionary<int, decimal>();
+        var lines = new List<string>((IEnumerable<string>)_streamReader.ReadLines());
 
-        for (var i = 0; i < separatedText.Count; i++)
+        for (var i = 0; i < lines.Count; i++)
         {
             var sum = 0m;
             var isBroken = false;
             
-            foreach (var number in separatedText[i])
+            foreach (var number in lines[i]!.Trim().Split(separator))
             {
-                if (decimal.TryParse(number, NumberStyles.Any, _format, out var res))
+                if (decimal.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out var res))
                 {
                     sum += res;
                 }
@@ -55,7 +38,7 @@ public class ContentSeparator
 
             if (!isBroken)
             {
-                sumList.Add(sum);
+                sumList.Add(i + 1, sum);
             }
         }
 
