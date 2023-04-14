@@ -81,7 +81,8 @@ public class ContentSeparatorTests
             "1,2,3,4,5,j6,7,8,9,0a",
             "1.234,1.789,",
             "1, 2 , 3 , 4 , 5 , j 6 ,  7 , 8 , 9 , 0 a ",
-            ",,,,,,,"
+            ",,,,,,,",
+            ""
         };
             
         return result;
@@ -94,8 +95,7 @@ public class ContentSeparatorTests
             { 1, 115.4m },
             { 2, 5674246.13134765974893m },
             { 4, 1491.023m },
-            { 12, 3.023m },
-            { 14, 0m }
+            { 12, 3.023m }
         };
 
         return result;
@@ -120,6 +120,6 @@ public class ContentSeparatorTests
     
     private static List<int> GetHardBrokenIndexes()
     {
-        return new List<int> { 3, 5, 6, 7, 8, 9, 10, 11, 13 };
+        return new List<int> { 3, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15 };
     }
 }

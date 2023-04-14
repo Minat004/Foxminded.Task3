@@ -15,23 +15,25 @@ public class ContentSeparator
     {
         brokenList = new List<int>();
         var sumList = new Dictionary<int, decimal>();
-        var lines = new List<string>((IEnumerable<string>)_streamReader.ReadLines());
+        var index = 1;
 
-        for (var i = 0; i < lines.Count; i++)
+        foreach (var line in _streamReader.ReadLines())
         {
-            var sum = 0m;
+            var sum = decimal.Zero;
             var isBroken = false;
-            var separated = lines[i].Trim().Split(separator);
-            
-            foreach (var number in separated)
+            var separated = line!.Trim().Split(separator);
+            var isEmpty = true;
+
+            for (var i = 0; i < separated.Length; i++)
             {
-                if (decimal.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out var res))
+                if (decimal.TryParse(separated[i], NumberStyles.Any, CultureInfo.InvariantCulture, out var res))
                 {
                     sum += res;
+                    isEmpty = false;
                 }
-                else if (!string.IsNullOrEmpty(number.Trim()) || separated[^1] != string.Empty)
+                else if (!string.IsNullOrEmpty(separated[i].Trim()) || (isEmpty && i == separated.Length - 1))
                 {
-                    brokenList.Add(i + 1);
+                    brokenList.Add(index);
                     isBroken = true;
                     break;
                 }
@@ -39,8 +41,10 @@ public class ContentSeparator
 
             if (!isBroken)
             {
-                sumList.Add(i + 1, sum);
+                sumList.Add(index, sum);
             }
+
+            index++;
         }
 
         return sumList;

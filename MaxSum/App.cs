@@ -39,15 +39,25 @@ public static class App
         {
             IContentStreamReader streamReader = new ContentStreamReader(value);
             var content = new ContentSeparator(streamReader);
-
             var sumArray = content.GetDictOfSum(out var brokenList);
-            var index = 
-                sumArray
-                    .FirstOrDefault(x => x.Value == sumArray.Max(k => k.Value)).Key;
 
-            Console.WriteLine();
-            Console.Write("Index of MAX: ");
-            Console.WriteLine(index);
+            if (sumArray.Count != 0)
+            {
+                var index =
+                    sumArray
+                        .FirstOrDefault(x => 
+                            x.Value == sumArray.Max(k => k.Value))
+                        .Key;
+                
+                Console.WriteLine();
+                Console.Write("Index of MAX: ");
+                Console.WriteLine(index);
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("All lines is BROKEN!");
+            }
 
             Console.WriteLine();
             Console.Write("List of BROKEN indexes: ");
